@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Update Pegawai</title>
+	
+	<object th:include="fragments/fragment :: css" th:remove="tag"></object>
+	<object th:include="fragments/fragment :: js" th:remove="tag"></object>
+</head>
+
+<body>
+	<nav th:replace="fragments/fragment :: navbar"></nav>
+	<div class="container-fluid">
+		<h2>Tambah Pegawai</h2>
+		<form th:action="@{/pegawai/tambah}" th:object="${pegawai}" method="POST">
+		<div class="row">
+			<div class="form-group">
+    			Nama : <br>
+				<input type="text" name="nama" />
+				<br>
+  			</div>
+		</div>
+		<div class="row">
+			<div class="form-group">
+    			Tempat Lahir : <br>
+				<input type="text" name="tempatLahir" />
+				<br>
+  			</div>
+		</div>
+		<div class="row">
+			<div class="form-group">
+    			Tanggal Lahir : <br>
+				<input type="date" name="tanggalLahir" />
+				<br>
+  			</div>
+		</div>
+		<div class="row">
+			<div class="form-group">
+    			Tahun Masuk : <br>
+				<input type="text" name="tahunMasuk" />
+				<br>
+  			</div>
+		</div>
+		<div class="row">
+			<div class="form-group">
+    			Provinsi : <br>
+				<select class="form-control" name="provinsi" id="provinsi">
+					<option value="">-------------</option>
+				        <option th:each="pro : ${provinsi}"
+				                th:value="${pro.id}"
+				                th:text="${pro.nama}">
+				        </option>
+				</select>
+  			</div>
+		</div>
+		<div class="row">
+			<div class="form-group">
+				Nama Instansi : <br> 
+    			<select class="form-control" name="instansi" id="instansi">
+					<option value="">-------------</option>
+				        <option th:each="instan : ${instansi}"
+				                th:value="${instan.id}"
+				                th:text="${instan.nama}">
+				        </option>
+				</select>
+  			</div>
+		</div>
+		<div class="row">
+			Jabatan : <br>
+			<div class="form-group" th:each="jabatanPegawai, statusJabatan : *{jabatanPegawaiList}" >
+    			<select th:field="*{jabatanPegawaiList[__${statusJabatan.index}__].jabatan}">
+					<option th:each="jabat, status : ${jabatan}" th:value="${jabat.id}" th:text="${jabat.nama}"/>
+				</select>
+  			</div>
+		</div>
+		
+		<br><button type="submit" name="addJabatan">Tambah Jabatan Lainnya</button>
+		<button type="submit">Simpan</button>
+		
+		
+		
+		</form>
+		
+	</div>
+	
+</body>
+
+<script type="text/javascript">
+$(document).ready(function () {
+    $("#provinsi").change(function () {
+           $.getJSON("/instansi/tambah", {
+               provinsiId : $(this).val(),
+               ajax : 'true'
+           }, function(data) {
+               var html = '';
+               var len = data.length;
+               for ( var i = 0; i < len; i++) {
+                   html += '<option value="' + data[i].id + '">'
+                           + data[i].nama + '</option>';
+               }
+               html += '';
+               console.log("berhasil");
+               $('#instansi').html(html);
+           });
+    });    
+        
+});
+</script>
+</html>

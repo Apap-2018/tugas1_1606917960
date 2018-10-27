@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Cari Pegawai</title>
+	
+	<object th:include="fragments/fragment :: css" th:remove="tag"></object>
+	<object th:include="fragments/fragment :: js" th:remove="tag"></object>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.15/css/dataTables.jqueryui.min.css"/>
+	<link href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="https://cdn.datatables.net/1.10.15/js/dataTables.jqueryui.min.js"></script>
+	
+	<script type="text/javascript">
+		$(document).ready( function () {
+			//alert('Halo')
+		    $('#pegawaiTable').DataTable();
+		} );
+	</script>
+</head>
+
+<body>
+	<nav th:replace="fragments/fragment :: navbar"></nav>
+	<div class="container-fluid">
+		<br>
+		<h3>Cari Pegawai</h3>
+		<form>
+		<!--  <form th:action="@{/pegawai/tambah}" th:object="${pegawai}" method="POST"> -->
+			<br>
+			Provinsi : <br>
+			<select class="form-control" name="provinsi" id="provinsi">
+				<option value="">Pilih Provinsi</option>
+			        <option th:each="pro : ${provinsi}"
+			                th:value="${pro.id}"
+			                th:text="${pro.nama}">
+			        </option>
+			</select>
+			<br>
+			Nama Instansi : <br>
+			<select class="form-control" name="instansi" id="instansi">
+				<option value="">Pilih Instansi</option>
+			        <option th:each="instan : ${instansi}"
+			                th:value="${instan.id}"
+			                th:text="${instan.nama}">
+			        </option>
+			</select>
+			<br>
+			Jabatan : <br>
+			<select class="form-control" name="jabatan" id="jabatan">
+				<option value="">Pilih Jabatan</option>
+			        <option th:each="jabat : ${jabatan}"
+			                th:value="${jabat.id}"
+			                th:text="${jabat.nama}">
+			        </option>
+			</select>
+			<br>
+			<button type="submit" class="btn btn-primary">Cari</button>
+		</form>
+		<hr>
+		
+		<table id="pegawaiTable" class="display">
+	       <thead>
+	            <tr>
+					<th>NIP</th>
+	                <th>Nama</th>
+	                <th>Tempat Lahir</th>
+	                <th>Tanggal Lahir</th>
+	                <th>Tahun Masuk</th>
+	                <th>Nama Instansi</th>
+	                <th>Jabatan</th>
+	            </tr>
+	        </thead>
+	        <!-- 
+			<tr th:each="jabat : ${jabatan}">
+				<td th:text="${jabat.nama}"></td>
+				<td th:text="${jabat.deskripsi}"></td>
+				<td th:text="${jabat.gaji_pokok}"></td>
+			</tr>
+			-->
+	    </table>
+		
+		
+	</div>
+	<footer th:replace="fragments/fragment :: footer-static"></footer>
+	
+</body>
+</html>

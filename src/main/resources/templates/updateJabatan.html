@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Update Jabatan</title>
+	<object th:include="fragments/fragment :: css" th:remove="tag"></object>
+	<object th:include="fragments/fragment :: js" th:remove="tag"></object>
+</head>
+<body>
+	<nav th:replace="fragments/fragment :: navbar"></nav>
+	<br>
+	<div class="container-fluid">
+		<h2>Update Jabatan</h2>
+		<br>
+		<form th:action="@{/jabatan/ubah}" th:object="${newJabatan}" method="POST">
+			<input type="hidden" th:field="${jabatan.id}"/>
+			Nama : <br>
+			<input type="text" name="nama" />
+			<br>
+			Deskripsi : <br>
+			<input type="text" name="deskripsi" />
+			<br>
+			Gaji Pokok : <br>
+			<input type="number" name="gajiPokok" />
+			<br><br>
+			<button type="submit">Submit</button>
+		</form>
+	</div>
+	
+	
+</body>
+</html>
