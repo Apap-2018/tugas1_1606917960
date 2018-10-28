@@ -1,5 +1,7 @@
 package com.apap.tugasapap.service;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,12 @@ public class JabatanPegawaiServiceImpl implements JabatanPegawaiService {
 		// TODO Auto-generated method stub
 		jabatanPegawaiDb.save(jabatanPegawai);
 		
+	}
+
+	@Override
+	public List<JabatanPegawaiModel> getAllJabatanPegawai() {
+		// TODO Auto-generated method stub
+		return jabatanPegawaiDb.findAll();
 	}
 
 }

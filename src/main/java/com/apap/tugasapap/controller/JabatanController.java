@@ -12,12 +12,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.apap.tugasapap.model.JabatanModel;
+import com.apap.tugasapap.model.JabatanPegawaiModel;
+import com.apap.tugasapap.service.JabatanPegawaiService;
 import com.apap.tugasapap.service.JabatanService;
 
 @Controller
 public class JabatanController {
 	@Autowired
 	private JabatanService jabatanService;
+	
+	@Autowired
+	private JabatanPegawaiService jabatanPegawaiService;
 
 	@RequestMapping(value="/jabatan/tambah", method=RequestMethod.GET)
 	private String add(Model model) {
@@ -42,6 +47,10 @@ public class JabatanController {
 	private String viewAllJabatan(Model model){
 		List<JabatanModel> jabatan = jabatanService.getAllJabatan();
 		model.addAttribute("jabatan", jabatan);
+		//List<JabatanPegawaiModel> jabatanPegawai = jabatanPegawaiService.getAllJabatanPegawai();
+		//System.out.println(jabatanPegawai.get(0).getJabatan().getId());
+		//System.out.println(jabatanPegawai.get(0).getPegawai().getId());
+		//System.out.println(jabatanPegawai.size());
 		return "viewAllJabatan";
 	}
 	

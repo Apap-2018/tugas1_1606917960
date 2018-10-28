@@ -16,6 +16,23 @@
 		$(document).ready( function () {
 		    $('#pegawaiTable').DataTable();
 		} );
+		
+		$('#provinsi').change(
+			     function() {
+			         $.getJSON("/instansi/tambah", {
+			             idProvinsi : $(this).val(),
+			             ajax : 'true'
+			         }, function(data) {
+			             var html = '<option value="">Pilih Instansi</option>';
+			             var len = data.length;
+			             for ( var i = 0; i < len; i++) {
+			                 html += '<option value="' + data[i].id + '">'
+			                         + data[i].nama + '</option>';
+			             }
+			             html += '</option>';
+			             $('#instansi').html(html);
+				});
+			});
 	</script>
 </head>
 
@@ -26,10 +43,10 @@
 		<h3 style="text-align:center;">Cari Pegawai</h3><hr>
 		<form th:action="@{/pegawai/cari}" method="GET">
 			<br>
-			<!--
+			<div class="col-md-3">
 			Provinsi : <br>
 			<select class="form-control" name="idProvinsi" id="provinsi">
-				<option disabled="disabled" selected="selected">---- Pilih Provinsi ----</option>
+				<option disabled="disabled" selected="selected">Pilih Provinsi</option>
 			        <option th:each="pro : ${provinsi}"
 			                th:value="${pro.id}"
 			                th:text="${pro.nama}">
@@ -38,8 +55,8 @@
 			<br>
 			Nama Instansi : <br>
 			<select class="form-control" name="idInstansi" id="instansi">
-				<option disabled="disabled" selected="selected">---- Pilih Instansi ----</option>
-			        <option th:each="instan : ${instansi}"
+				<option disabled="disabled" selected="selected">Pilih Instansi</option>
+			        <option th:each="instan : ${listInstansi}"
 			                th:value="${instan.id}"
 			                th:text="${instan.nama}">
 			        </option>
@@ -47,14 +64,15 @@
 			<br>
 			Jabatan : <br>
 			<select class="form-control" name="idJabatan" id="jabatan">
-				<option disabled="disabled" selected="selected">---- Pilih Jabatan ----</option>
+				<option disabled="disabled" selected="selected">Pilih Jabatan</option>
 			        <option th:each="jabat : ${jabatan}"
 			                th:value="${jabat.id}"
 			                th:text="${jabat.nama}">
 			        </option>
-			</select> -->
-			<br>
+			</select><br>
 			<button type="submit" class="btn btn-primary">Cari</button>
+			</div>
+			
 		</form>
 		<hr>
 		
@@ -71,7 +89,7 @@
 	            </tr>
 	        </thead>
 	        <tbody>
-				<tr th:each="peg : *{pegawai}">
+				<tr th:each="peg : *{listPegawai}">
 					<td th:text="${peg.nip}"></td>
 					<td th:text="${peg.nama}"></td>
 					<td th:text="${peg.tempatLahir}"></td>

@@ -6,33 +6,29 @@
 	
 	<object th:include="fragments/fragment :: css" th:remove="tag"></object>
 	<object th:include="fragments/fragment :: js" th:remove="tag"></object>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 </head>
 
 <body>
 	<nav th:replace="fragments/fragment :: navbar"></nav>
 	<div class="container-fluid">
-		<h2>Tambah Pegawai</h2>
-		<form th:action="@{/pegawai/ubah}" th:object="${newPegawai}" method="POST">
+		<h2>Update Pegawai</h2>
+		<form th:action="@{/pegawai/ubah}" th:object="${pegawai}" method="POST">
 		<input type="hidden" th:field="${pegawai.nip}"/>
+		<input type="hidden" th:field="${pegawai.id}"/>
+			<div class="col-md-3">
 			Nama : <br>
-			<input type="text" name="nama" />
-			<br>
+			<input type="text" name="nama" class="form-control"/>
    			Tempat Lahir : <br>
-			<input type="text" name="tempatLahir" />
-			<br>
-
+			<input type="text" name="tempatLahir" class="form-control"/>
    			Tanggal Lahir : <br>
-			<input type="date" name="tanggalLahir" />
-			<br>
-
+			<input type="date" name="tanggalLahir" class="form-control"/>
    			Tahun Masuk : <br>
-			<input type="text" name="tahunMasuk" />
-			<br>
-
+			<input type="text" name="tahunMasuk" class="form-control"/>
    			Provinsi : <br>
 			<select class="form-control" name="provinsi" id="provinsi">
-				<option value="">-------------</option>
-			        <option th:each="pro : ${provinsi}"
+				<option disabled="disabled" selected="selected">Pilih Provinsi</option>
+			        <option th:each="pro : ${listProvinsi}"
 			                th:value="${pro.id}"
 			                th:text="${pro.nama}">
 			        </option>
@@ -40,29 +36,31 @@
 
 			Nama Instansi : <br> 
    			<select class="form-control" name="instansi" id="instansi">
-				<option value="">-------------</option>
-			        <option th:each="instan : ${instansi}"
+				<option disabled="disabled" selected="selected">Pilih Instansi</option>
+			        <option th:each="instan : ${listInstansi}"
 			                th:value="${instan.id}"
 			                th:text="${instan.nama}">
 			        </option>
 			</select>
   			Jabatan : <br>
 			<div th:each="jabatanPegawai, statusJabatan : *{jabatanPegawaiList}" >
-    			<select th:field="*{jabatanPegawaiList[__${statusJabatan.index}__].jabatan}">
+    			<select class="form-control" th:field="*{jabatanPegawaiList[__${statusJabatan.index}__].jabatan}">
 					<option th:each="jabat, status : ${jabatan}" th:value="${jabat.id}" th:text="${jabat.nama}"/>
 				</select>
   			</div>
 		
-		<br><button type="submit" name="addJabatan" class="btn btn-success">Tambah Jabatan</button>
-		<button type="submit" name="deleteJabatan" class="btn btn-danger">Hapus Jabatan</button>
+		<br><button type="submit" name="addUpdateJabatan" class="btn btn-success">Tambah Jabatan</button>
 		<br><br>
 		<button type="submit" class="btn btn-primary">Simpan</button>
-		
+		</div>
 		
 		
 		</form>
 		
 	</div>
+	
+	<br>
+	<footer th:replace="fragments/fragment :: footer-static"></footer>
 	
 </body>
 
