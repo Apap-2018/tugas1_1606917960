@@ -14,7 +14,6 @@
 	
 	<script type="text/javascript">
 		$(document).ready( function () {
-			//alert('Halo')
 		    $('#pegawaiTable').DataTable();
 		} );
 	</script>
@@ -24,13 +23,13 @@
 	<nav th:replace="fragments/fragment :: navbar"></nav>
 	<div class="container-fluid">
 		<br>
-		<h3>Cari Pegawai</h3>
-		<form>
-		<!--  <form th:action="@{/pegawai/tambah}" th:object="${pegawai}" method="POST"> -->
+		<h3 style="text-align:center;">Cari Pegawai</h3><hr>
+		<form th:action="@{/pegawai/cari}" method="GET">
 			<br>
+			<!--
 			Provinsi : <br>
-			<select class="form-control" name="provinsi" id="provinsi">
-				<option value="">Pilih Provinsi</option>
+			<select class="form-control" name="idProvinsi" id="provinsi">
+				<option disabled="disabled" selected="selected">---- Pilih Provinsi ----</option>
 			        <option th:each="pro : ${provinsi}"
 			                th:value="${pro.id}"
 			                th:text="${pro.nama}">
@@ -38,8 +37,8 @@
 			</select>
 			<br>
 			Nama Instansi : <br>
-			<select class="form-control" name="instansi" id="instansi">
-				<option value="">Pilih Instansi</option>
+			<select class="form-control" name="idInstansi" id="instansi">
+				<option disabled="disabled" selected="selected">---- Pilih Instansi ----</option>
 			        <option th:each="instan : ${instansi}"
 			                th:value="${instan.id}"
 			                th:text="${instan.nama}">
@@ -47,13 +46,13 @@
 			</select>
 			<br>
 			Jabatan : <br>
-			<select class="form-control" name="jabatan" id="jabatan">
-				<option value="">Pilih Jabatan</option>
+			<select class="form-control" name="idJabatan" id="jabatan">
+				<option disabled="disabled" selected="selected">---- Pilih Jabatan ----</option>
 			        <option th:each="jabat : ${jabatan}"
 			                th:value="${jabat.id}"
 			                th:text="${jabat.nama}">
 			        </option>
-			</select>
+			</select> -->
 			<br>
 			<button type="submit" class="btn btn-primary">Cari</button>
 		</form>
@@ -71,13 +70,22 @@
 	                <th>Jabatan</th>
 	            </tr>
 	        </thead>
-	        <!-- 
-			<tr th:each="jabat : ${jabatan}">
-				<td th:text="${jabat.nama}"></td>
-				<td th:text="${jabat.deskripsi}"></td>
-				<td th:text="${jabat.gaji_pokok}"></td>
-			</tr>
-			-->
+	        <tbody>
+				<tr th:each="peg : *{pegawai}">
+					<td th:text="${peg.nip}"></td>
+					<td th:text="${peg.nama}"></td>
+					<td th:text="${peg.tempatLahir}"></td>
+					<td th:text="${peg.tanggalLahir}"></td>
+					<td th:text="${peg.tahunMasuk}"></td>
+					<td th:text="${peg.instansi.nama} + ' - ' + ${peg.instansi.provinsi.nama}"></td>
+					<td>
+						<ul>
+							<li th:each="jabatan: ${peg.jabatanPegawaiList}" th:text="${jabatan.jabatan.nama}"></li>
+						</ul>
+						
+					</td>
+				</tr>
+			</tbody>
 	    </table>
 		
 		

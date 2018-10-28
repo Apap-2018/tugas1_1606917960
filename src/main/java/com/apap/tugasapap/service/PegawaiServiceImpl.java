@@ -1,4 +1,4 @@
-package com.apap.tugasapap.service;
+	package com.apap.tugasapap.service;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -10,16 +10,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.apap.tugasapap.model.InstansiModel;
+import com.apap.tugasapap.model.JabatanModel;
 import com.apap.tugasapap.model.JabatanPegawaiModel;
 import com.apap.tugasapap.model.PegawaiModel;
 import com.apap.tugasapap.model.ProvinsiModel;
 import com.apap.tugasapap.repository.PegawaiDB;
+import com.apap.tugasapap.repository.PegawaiJabatanDB;
 
 @Service
 @Transactional
 public class PegawaiServiceImpl implements PegawaiService {
 	@Autowired
 	private PegawaiDB pegawaiDb;
+	
+	@Autowired
+	private PegawaiJabatanDB PegawaiJabatanDb;
 	
 	@Override
 	public PegawaiModel getPegawaiDetailBynip(String nip) {
@@ -44,8 +49,14 @@ public class PegawaiServiceImpl implements PegawaiService {
 		oldPegawai.setInstansi(pegawai.getInstansi());
 		oldPegawai.setTempatLahir(pegawai.getTempatLahir());
 		
-		for (int i = 0; i<oldPegawai.getJabatanPegawaiList().size(); i++) {
+		int size = oldPegawai.getJabatanPegawaiList().size();
+		for (int i = 0; i< size; i++) {
 			oldPegawai.getJabatanPegawaiList().get(i).setJabatan(pegawai.getJabatanPegawaiList().get(i).getJabatan());
+		}
+		
+		for (int i = size; i < pegawai.getJabatanPegawaiList().size(); i++) {
+			pegawai.getJabatanPegawaiList().get(i).setPegawai(oldPegawai);
+			PegawaiJabatanDb.save(pegawai.getJabatanPegawaiList().get(i));
 		}
 		
 	}
@@ -118,7 +129,51 @@ public class PegawaiServiceImpl implements PegawaiService {
 		return nip;
 		
 	}
-	
-	
 
+	@Override
+	public List<PegawaiModel> findPegawaiByInstansiAndJabatan(InstansiModel instansi, JabatanModel jabatan) {
+		// TODO Auto-generated method stub
+		List<PegawaiModel> pegawaiInstansi = instansi.getPegawaiList();
+		List<PegawaiModel> search = new ArrayList<>();
+		long idJabatan = jabatan.getId();
+		
+		for(PegawaiModel peg : pegawaiInstansi) {
+			for(JabatanPegawaiModel jab: peg.getJabatanPegawaiList()) {
+				if(jab.getJabatan().getId() == idJabatan) {
+					search.add(peg);
+					}
+				}
+		}
+		return search;
+	}
+
+	@Override
+	public List<PegawaiModel> findPegawaiByProvinsiAndJabatan(List<PegawaiModel> pegawaiProvinsi,
+			JabatanModel jabatan) {
+		// TODO Auto-generated method stub
+		List<PegawaiModel> search = new ArrayList<>();
+		
+		for(PegawaiModel peg: pegawaiProvinsi) {
+			for(JabatanPegawaiModel jab: peg.getJabatanPegawaiList()) {
+				if(jab.getJabatan().getId() == jabatan.getId()) {
+					search.add(peg);
+				}
+			}
+		}
+		return search;
+	}
+
+	@Override
+	public List<PegawaiModel> getPegawaiByInstansiAndTanggalLahirAndTahunMasuk(
+			Date tanggalLahir, String tahunMasuk, InstansiModel instansi) {
+		// TODO Auto-generated method stub
+		return pegawaiDb.findByTanggalLahirAndTahunMasukAndInstansi(tanggalLahir, tahunMasuk, instansi);
+	}
+
+	@Override
+	public List<PegawaiModel> findPegawaiByInstansi(InstansiModel instansi) {
+		// TODO Auto-generated method stub
+		return pegawaiDb.findByInstansi(instansi);
+	}
+	
 }

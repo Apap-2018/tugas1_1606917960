@@ -54,7 +54,7 @@ public class JabatanController {
 	}
 	
 	@RequestMapping(value="/jabatan/ubah/{id}", method = RequestMethod.GET)
-	private String updateFlight(@PathVariable(value="id") long id, Model model) {
+	private String updateJabatan(@PathVariable(value="id") long id, Model model) {
 		JabatanModel jabatan = jabatanService.getJabatanDetailById(id);
 		model.addAttribute("jabatan", jabatan);
 		model.addAttribute("newJabatan", new JabatanModel());
