@@ -221,7 +221,7 @@ public class PegawaiController {
 		return "updatePegawai";
 	}
 	
-	@RequestMapping(value="/pegawai/ubah/", method=RequestMethod.POST, params={"addRowUpdateJabatan"})
+	@RequestMapping(value="/pegawai/ubah/", method=RequestMethod.POST, params={"addJabatan"})
 	private String addRowUpdateJabatan(@ModelAttribute PegawaiModel pegawai, Model model) {
 		JabatanPegawaiModel jabpeg = new JabatanPegawaiModel();
 		jabpeg.setPegawai(pegawai);

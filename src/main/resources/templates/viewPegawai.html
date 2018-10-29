@@ -27,7 +27,7 @@
 		<p th:text="'Gaji : Rp '+${gaji}"></p>
 		<a class="btn btn-primary" th:href="@{'/pegawai/ubah/'+ ${pegawai.nip}}">Ubah Pegawai</a>
 	</div>
-	<footer th:replace="fragments/fragment :: footer-fixed"></footer>
+	<footer th:replace="fragments/fragment :: footer-static"></footer>
 	
 </body>
 </html>

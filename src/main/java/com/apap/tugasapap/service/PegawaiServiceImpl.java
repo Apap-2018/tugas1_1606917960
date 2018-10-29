@@ -63,6 +63,8 @@ public class PegawaiServiceImpl implements PegawaiService {
 		
 		int oldSize = oldPegawai.getJabatanPegawaiList().size();
 		int newSize = pegawai.getJabatanPegawaiList().size();
+		System.out.println(oldSize);
+		System.out.println(newSize);
 		
 		for (int i = 0; i< oldSize; i++) {
 			oldPegawai.getJabatanPegawaiList().get(i).setJabatan(pegawai.getJabatanPegawaiList().get(i).getJabatan());
@@ -74,6 +76,7 @@ public class PegawaiServiceImpl implements PegawaiService {
 		}
 		
 		if (newSize >= oldSize) {
+			System.out.println("masuk");
 			for (int i = oldSize; i<newSize; i++) {
 				JabatanPegawaiModel baru = pegawai.getJabatanPegawaiList().get(i);
 				baru.setPegawai(oldPegawai);
