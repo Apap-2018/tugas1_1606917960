@@ -23,7 +23,7 @@ public class JabatanController {
 	
 	@Autowired
 	private JabatanPegawaiService jabatanPegawaiService;
-
+	
 	@RequestMapping(value="/jabatan/tambah", method=RequestMethod.GET)
 	private String add(Model model) {
 		model.addAttribute("jabatan", new JabatanModel());
@@ -46,11 +46,10 @@ public class JabatanController {
 	@RequestMapping(value = "/jabatan/viewall", method = RequestMethod.GET)
 	private String viewAllJabatan(Model model){
 		List<JabatanModel> jabatan = jabatanService.getAllJabatan();
-		model.addAttribute("jabatan", jabatan);
+		
 		//List<JabatanPegawaiModel> jabatanPegawai = jabatanPegawaiService.getAllJabatanPegawai();
-		//System.out.println(jabatanPegawai.get(0).getJabatan().getId());
-		//System.out.println(jabatanPegawai.get(0).getPegawai().getId());
-		//System.out.println(jabatanPegawai.size());
+		//System.out.println(jabatanPegawai.get(0).getJabatan());
+		model.addAttribute("jabatan", jabatan);
 		return "viewAllJabatan";
 	}
 	
@@ -74,7 +73,6 @@ public class JabatanController {
 	private String updateJabatanSubmit(@ModelAttribute JabatanModel jabatan, Model model) {
 		model.addAttribute("jabatan", jabatan);
 		jabatanService.updateJabatan(jabatan);
-		//System.out.println(jabatan.getNama());
 		return "update";
 	}
 }

@@ -14,6 +14,7 @@ import com.apap.tugasapap.model.JabatanModel;
 import com.apap.tugasapap.model.JabatanPegawaiModel;
 import com.apap.tugasapap.model.PegawaiModel;
 import com.apap.tugasapap.model.ProvinsiModel;
+import com.apap.tugasapap.repository.JabatanDB;
 import com.apap.tugasapap.repository.PegawaiDB;
 import com.apap.tugasapap.repository.PegawaiJabatanDB;
 
@@ -24,7 +25,13 @@ public class PegawaiServiceImpl implements PegawaiService {
 	private PegawaiDB pegawaiDb;
 	
 	@Autowired
+	private JabatanDB jabatanDb;
+	
+	@Autowired
 	private PegawaiJabatanDB PegawaiJabatanDb;
+	
+	@Autowired
+	private JabatanPegawaiService jabatanPegawaiService;
 	
 	@Override
 	public PegawaiModel getPegawaiDetailBynip(String nip) {
@@ -41,23 +48,39 @@ public class PegawaiServiceImpl implements PegawaiService {
 	@Override
 	public void updatePegawai(PegawaiModel pegawai) {
 		// TODO Auto-generated method stub
+		System.out.println(pegawai.getNama());
 		PegawaiModel oldPegawai = this.getPegawaiDetailBynip(pegawai.getNip());
+		
+		String new_nip = this.buatNip(pegawai.getInstansi(), pegawai);
+		oldPegawai.setNip(new_nip);
+		
 		oldPegawai.setNama(pegawai.getNama());
 		oldPegawai.setTahunMasuk(pegawai.getTahunMasuk());
 		oldPegawai.setTanggalLahir(pegawai.getTanggalLahir());
-		oldPegawai.setNip(pegawai.getNip());
+		
 		oldPegawai.setInstansi(pegawai.getInstansi());
 		oldPegawai.setTempatLahir(pegawai.getTempatLahir());
 		
-		int size = oldPegawai.getJabatanPegawaiList().size();
-		for (int i = 0; i< size; i++) {
+		int oldSize = oldPegawai.getJabatanPegawaiList().size();
+		int newSize = pegawai.getJabatanPegawaiList().size();
+		
+		for (int i = 0; i< oldSize; i++) {
 			oldPegawai.getJabatanPegawaiList().get(i).setJabatan(pegawai.getJabatanPegawaiList().get(i).getJabatan());
 		}
 		
-		for (int i = size; i < pegawai.getJabatanPegawaiList().size(); i++) {
+		for (int i = oldSize; i < pegawai.getJabatanPegawaiList().size(); i++) {
 			pegawai.getJabatanPegawaiList().get(i).setPegawai(oldPegawai);
 			PegawaiJabatanDb.save(pegawai.getJabatanPegawaiList().get(i));
 		}
+		
+		if (newSize >= oldSize) {
+			for (int i = oldSize; i<newSize; i++) {
+				JabatanPegawaiModel baru = pegawai.getJabatanPegawaiList().get(i);
+				baru.setPegawai(oldPegawai);
+				jabatanPegawaiService.addJabatanPegawai(baru);
+			}
+		}
+				
 		
 	}
 
@@ -148,16 +171,16 @@ public class PegawaiServiceImpl implements PegawaiService {
 	}
 
 	@Override
-	public List<PegawaiModel> findPegawaiByProvinsiAndJabatan(List<PegawaiModel> pegawaiProvinsi,
+	public List<PegawaiModel> findPegawaiByProvinsiAndJabatan(ProvinsiModel provinsi,
 			JabatanModel jabatan) {
 		// TODO Auto-generated method stub
 		List<PegawaiModel> search = new ArrayList<>();
+		List<JabatanPegawaiModel> listPegawaiJabatan = 
+				jabatanDb.findById(jabatan.getId()).getJabatanPegawaiList();
 		
-		for(PegawaiModel peg: pegawaiProvinsi) {
-			for(JabatanPegawaiModel jab: peg.getJabatanPegawaiList()) {
-				if(jab.getJabatan().getId() == jabatan.getId()) {
-					search.add(peg);
-				}
+		for (int i = 0; i < listPegawaiJabatan.size(); i++) {
+			if (listPegawaiJabatan.get(i).getPegawai().getInstansi().getProvinsi().getId() == provinsi.getId()) {
+				search.add(listPegawaiJabatan.get(i).getPegawai());
 			}
 		}
 		return search;
@@ -174,6 +197,20 @@ public class PegawaiServiceImpl implements PegawaiService {
 	public List<PegawaiModel> findPegawaiByInstansi(InstansiModel instansi) {
 		// TODO Auto-generated method stub
 		return pegawaiDb.findByInstansi(instansi);
+	}
+
+	@Override
+	public List<PegawaiModel> findPegawaiByProvinsi(Long idProvinsi) {
+		// TODO Auto-generated method stub
+		List<PegawaiModel> search = new ArrayList<>();
+		
+		for(PegawaiModel pegawai : pegawaiDb.findAll()) {
+			if (pegawai.getInstansi().getProvinsi().getId() == idProvinsi) {
+				search.add(pegawai);
+			}
+		}
+		
+		return search;
 	}
 	
 }

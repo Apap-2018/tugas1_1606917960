@@ -12,10 +12,10 @@
 <body>
 	<nav th:replace="fragments/fragment :: navbar"></nav>
 	<div class="container-fluid">
-		<h2>Update Pegawai</h2>
-		<form th:action="@{/pegawai/ubah}" th:object="${pegawai}" method="POST">
-		<input type="hidden" th:field="${pegawai.nip}"/>
-		<input type="hidden" th:field="${pegawai.id}"/>
+		<h2 style="text-align:center;">Update Pegawai</h2><hr>
+		<form th:action="@{/pegawai/ubah}" th:object="${newPegawai}" method="POST">
+		<input type="hidden" th:field="${newPegawai.nip}" th:value="*{nip}"/>
+		<input type="hidden" th:field="${newPegawai.id}" th:value="*{id}"/>
 			<div class="col-md-3">
 			Nama : <br>
 			<input type="text" name="nama" class="form-control"/>
@@ -45,13 +45,13 @@
   			Jabatan : <br>
 			<div th:each="jabatanPegawai, statusJabatan : *{jabatanPegawaiList}" >
     			<select class="form-control" th:field="*{jabatanPegawaiList[__${statusJabatan.index}__].jabatan}">
-					<option th:each="jabat, status : ${jabatan}" th:value="${jabat.id}" th:text="${jabat.nama}"/>
+					<option th:each="jabat: ${listJabatan}" th:value="${jabat.id}" th:text="${jabat.nama}"/>
 				</select>
   			</div>
 		
-		<br><button type="submit" name="addUpdateJabatan" class="btn btn-success">Tambah Jabatan</button>
+		<br><button type="submit" name="addRowUpdateJabatan" class="btn btn-primary">Tambah Jabatan</button>
 		<br><br>
-		<button type="submit" class="btn btn-primary">Simpan</button>
+		<button type="submit" class="btn btn-success">Simpan</button>
 		</div>
 		
 		

@@ -144,7 +144,6 @@ public class PegawaiController {
 		
 		model.addAttribute("pegawai", pegawai);
 		model.addAttribute("nip", nip);
-		//System.out.println(pegawai.getTahunMasuk());
 		return "addPegawaiSuccess";
 	}
 		
@@ -176,35 +175,15 @@ public class PegawaiController {
 			else {
 				if (!idJabatan.isPresent()) {
 					//Filter berdasarkan provinsi
-					List<InstansiModel> listInstansi = provinsiService.getProvinsiDetailById
-							(Long.parseLong(idProvinsi.get())).getInstansiList();
-					for (int i = 0; i < listInstansi.size(); i++) {
-						List<PegawaiModel> listPegawaiBaru = listInstansi.get(i).getPegawaiList();
-						hasilPegawai.addAll(listPegawaiBaru);
-					}
+					hasilPegawai = pegawaiService.findPegawaiByProvinsi(Long.parseLong(idProvinsi.get()));
 					
 				}
 				else {
 					//Filter berdasarkan jabatan dan provinsi
-					List<InstansiModel> listInstansi = provinsiService.getProvinsiDetailById
-							(Long.parseLong(idProvinsi.get())).getInstansiList();
-					
-					for (int i = 0; i < listInstansi.size(); i++) {
-						List<PegawaiModel> listPegawai = listInstansi.get(i).getPegawaiList();
-						for (int j = 0; j < listPegawai.size(); j++) {
-							for (int k = 0; k < listPegawai.get(j).getJabatanPegawaiList().size(); k++) {
-								if (listPegawai.get(j).getJabatanPegawaiList().get(k).getJabatan().getId() 
-										== Long.parseLong(idJabatan.get())) {
-									hasilPegawai.add(listPegawai.get(j));
-									break;
-								}
-							}
-							
-						}
-					}
+					ProvinsiModel provinsi = provinsiService.getProvinsiDetailById(Long.parseLong(idProvinsi.get()));
+					JabatanModel jabatan = jabatanService.getJabatanDetailById(Long.parseLong(idJabatan.get()));;
+					hasilPegawai = pegawaiService.findPegawaiByProvinsiAndJabatan(provinsi, jabatan);
 				}
-				
-				
 			}
 		}
 		else {
@@ -238,21 +217,23 @@ public class PegawaiController {
 		model.addAttribute("listProvinsi", listProvinsi);
 		model.addAttribute("listInstansi", listInstansi);
 		model.addAttribute("listJabatan", listJabatan);
-		model.addAttribute("pegawai", pegawai);
+		model.addAttribute("newPegawai", pegawai);
 		return "updatePegawai";
 	}
 	
-	@RequestMapping(value="/pegawai/ubah/", method=RequestMethod.POST, params={"addUpdateJabatan"})
+	@RequestMapping(value="/pegawai/ubah/", method=RequestMethod.POST, params={"addRowUpdateJabatan"})
 	private String addRowUpdateJabatan(@ModelAttribute PegawaiModel pegawai, Model model) {
 		JabatanPegawaiModel jabpeg = new JabatanPegawaiModel();
 		jabpeg.setPegawai(pegawai);
 		pegawai.getJabatanPegawaiList().add(jabpeg);
-		model.addAttribute("pegawai", pegawai);
+		model.addAttribute("newPegawai", pegawai);
 		
 		List<ProvinsiModel> listProvinsi = provinsiService.getAllProvinsi();
 		model.addAttribute("listProvinsi", listProvinsi);
 		
-		List<InstansiModel> listInstansi = pegawai.getInstansi().getProvinsi().getInstansiList();
+		List<InstansiModel> listInstansi = new ArrayList<InstansiModel>();
+		listInstansi = listProvinsi.get(0).getInstansiList();
+		
 		model.addAttribute("listInstansi", listInstansi);
 		
 		List<JabatanModel> listJabatan = jabatanService.getAllJabatan();
@@ -260,15 +241,10 @@ public class PegawaiController {
 	    return "updatePegawai";
 	}
 	
-	
 	@RequestMapping(value="/pegawai/ubah", method = RequestMethod.POST)
 	private String updateJabatanSubmit(@ModelAttribute PegawaiModel pegawai, Model model) {
 		pegawaiService.updatePegawai(pegawai);
-		
-		String nip = pegawaiService.buatNip(pegawai.getInstansi(), pegawai);
-		pegawai.setNip(nip);
-		
-		model.addAttribute("nip", nip);
+		model.addAttribute("nip", pegawai.getNip());
 		return "updatePegawaiSuccess";
 	}
 	
