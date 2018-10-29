@@ -31,12 +31,16 @@
 					<th>Nama</th>
 	                <th>Deskripsi</th>
 	                <th>Gaji Pokok</th>
+	                <th>Jumlah Pegawai (orang)</th>
+	                <th>Pegawai yang Menjabat</th>
 	            </tr>
 	        </thead>
 			<tr th:each="jabat : ${jabatan}">
 				<td th:text="${jabat.nama}"></td>
 				<td th:text="${jabat.deskripsi}"></td>
 				<td th:text="${jabat.gajiPokok}"></td>
+				<td th:text="${jabat.jabatanPegawaiList.size()}"></td>
+				<td><a class="btn btn-info" th:href="@{'/jabatan/detail/'+ ${jabat.id}}">Detail</a></td>
 			</tr>
 	    </table>
 	</div>
